@@ -52,33 +52,45 @@ Notice that the parameter to the two solve methods is a **Reader**.
 This is a custom parser, to make pulling apart the puzzle input especially easy.
 Readers have 4 main method groups:
 <dl>
-<dt>expect...</dt>
+<dt><b>expect...</b><dt>
 <dd>Reads and returns the next ... whatever - int, word, N characters ... whatever.
 If the next text in the input is not the requested thing, the reader throws an exception.
 In the context of these puzzles, that generally means you have misunderstood the input data format.
 <br /><i>Examples:</i> <code>expectWord(), expectInteger()</code>, ...
 </dd>
-</dl>
-<dt>next...</dt>
+
+<dt><b>next...</b><dt>
 <dd>Tries to reads and returns the next ... data type. If it can, then great!
 If it can't, it returns null.
 <br /><i>Examples:</i> <code>nextWord(), nextInteger(), nextChar()</code>, ...
 </dd>
-<dt>scan...</dt>
+
+<dt><b>scan...</b><dt>
 <dd>Like next...(), these try to read the specified data type. But they do not return what was read.
 Instead, they only return a count of characters processed. That makes them good for a test to see
 IF a thing is present. 
 <br /><i>Examples:</i> <code>scan("Go ")</code> or <code>scanSpaces()</code> each return 0 if they fail,
 or >0 if the string "Go " or any spaces respectively are the next thing to read.
 </dd>
-<dt>lines</dt>
+
+<dt><b>lines</b><dt>
 <dd>An iterator for jumping from line to line. Can be used in a for-each loop:<br />
 <code>for (Reader line : input.lines()) { process(line.expectWord()); }</code>
 <br />
 If instead of an iterator, you simply want an array of Readers, or just an array of strings for each line,
 call <code>allLines()</code> or <code>allLineStrings()</code> 
 </dd>
+</dl>
 
+# The MD5 class
+MD5 hashing is used frequently by Advent of Code puzzles.
+This sounds daunting, but it isn't meant to be. It just happens to be a 
+reliable way for the puzzle author to generate pseudo-random data, 
+regardless of platform or programming language.
+
+If your puzzle asks for an MD5 hash (which will be a 32-byte array), use our 
+built-in MD5 utility. It takes either a string, or your own byte[]:
+> `byte[] myHash = MD5.hash(puzzle_input);`
 
 Check out Example.java for a sample of code which uses the Reader to solve a hypothetical puzzle problem.
 
