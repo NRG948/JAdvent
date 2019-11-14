@@ -4,6 +4,12 @@ Java template for the Advent Of Code puzzle challenge
 ## Welcome!
 This code is a template for anyone trying to solve the http://www.AdventOfCode.com puzzles.
 Place this code in a fresh java project, code your solutions, compile, and run.
+You might want to create a new such project for each puzzle year:
+[2015](http://www.AdventOfCode.com/2015)
+[2016](http://www.AdventOfCode.com/2016)
+[2017](http://www.AdventOfCode.com/2017)
+[2018](http://www.AdventOfCode.com/2018)
+[2019](http://www.AdventOfCode.com/2019)
 
 ## The UI
 The App uses Swing to build a simple form, which lists the various days in the
@@ -30,7 +36,7 @@ Example:
 Furthermore, your day classes must at least override `solvePart1`.
 The full declaration is 
 > `public Object solvePart1(Reader input) {`<br />
-> &nbsp; // TODO: read data from input, and find the answers <br />
+> &nbsp; *// TODO: read data from input, and find the answers* <br />
 > &nbsp; `return "your answer";`<br />
 > `}`
 
@@ -45,12 +51,15 @@ Until you do, the UI shows solvePart2 as <i>unimplemented</i>.
 > &nbsp; `return 1234.5678;`<br />
 > `}`
 
+## Check out Example.java
+It is an example solution for a hypothetical day 0. It also highlights a few ways to use the reader.
+
 
 
 # The Reader class
 Notice that the parameter to the two solve methods is a **Reader**.
 This is a custom parser, to make pulling apart the puzzle input especially easy.
-Readers have 4 main method groups:
+Readers have numerous helper methods, which you can explore. But most fall into 4 main method groups:
 <dl>
 <dt><b>expect...</b><dt>
 <dd>Reads and returns the next ... whatever - int, word, N characters ... whatever.
@@ -60,7 +69,7 @@ In the context of these puzzles, that generally means you have misunderstood the
 </dd>
 
 <dt><b>next...</b><dt>
-<dd>Tries to reads and returns the next ... data type. If it can, then great!
+<dd>Tries to read and return the next ... data type. If it can, then great!
 If it can't, it returns null.
 <br /><i>Examples:</i> <code>nextWord(), nextInteger(), nextChar()</code>, ...
 </dd>
@@ -82,6 +91,8 @@ call <code>allLines()</code> or <code>allLineStrings()</code>
 </dd>
 </dl>
 
+If you don't want to use these custom readers, the original String is `input.String()`
+
 # The MD5 class
 MD5 hashing is used frequently by Advent of Code puzzles.
 This sounds daunting, but it isn't meant to be. It just happens to be a 
@@ -91,8 +102,6 @@ regardless of platform or programming language.
 If your puzzle asks for an MD5 hash (which will be a 32-byte array), use our 
 built-in MD5 utility. It takes either a string, or your own byte[]:
 > `byte[] myHash = MD5.hash(puzzle_input);`
-
-Check out Example.java for a sample of code which uses the Reader to solve a hypothetical puzzle problem.
 
 
 **<i>Good luck!!</i>**
