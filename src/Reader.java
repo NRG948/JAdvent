@@ -273,6 +273,46 @@ public class Reader {
     }
 
     /**
+     * Read a long (base 10) from the buffer.
+     * 
+     * @return a Long, if one was next, or null if not
+     */
+    public Long nextLong() {
+        return nextLong(10);
+    }
+
+    /**
+     * Read a long of any radix from the buffer.
+     * 
+     * @return a Long, if one was next, or null if not
+     */
+    public Long nextLong(int radix) {
+        int prev = pos;
+        long n = 0;
+        boolean negative = false;
+        if (pos < posEnd && buffer[pos] == '-') {
+            // negative sign
+            negative = true;
+            pos++;
+        } else if (pos < posEnd && buffer[pos] == '+') {
+            // allow explicit positive sign
+            pos++;
+        }
+        while (pos < posEnd) {
+            int val = Character.digit(buffer[pos], radix);
+            if (val < 0)
+                break;
+            pos++;
+            n = n * 10 + val;
+        }
+        if (pos == prev)
+            return null;
+        if (negative)
+            n = -n;
+        return new Long(n);
+    }
+
+    /**
      * Read an integer (base 10) from the buffer.
      * 
      * @return an Integer, if one was next, or null if not
@@ -537,6 +577,28 @@ public class Reader {
      */
     public int expectInteger(int radix) {
         Integer n = nextInteger(radix);
+        if (n == null)
+            throw new ReaderException("an integer");
+        return n;
+    }
+
+    /**
+     * Read an expected integer
+     * 
+     * @throws a runtime exception if an integer is not next
+     */
+    public long expectLong() {
+        return expectLong(10);
+    }
+
+    /**
+     * Read an expected integer (with radix)
+     * 
+     * @param radix the numeric base of the integer
+     * @throws a runtime exception if an integer is not next
+     */
+    public long expectLong(int radix) {
+        Long n = nextLong(radix);
         if (n == null)
             throw new ReaderException("an integer");
         return n;
