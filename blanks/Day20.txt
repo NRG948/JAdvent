@@ -1,10 +1,10 @@
 import AoC.*;
 
-public class Day1 extends ADay
+public class Day20 extends ADay
 {
-    public Day1() 
+    public Day20() 
     {
-        super(1, "No Time for a Taxicab");  // title from 2016
+        super(20, "");
     }
 
     public Object solvePart1(Reader input) 
@@ -14,7 +14,7 @@ public class Day1 extends ADay
 
     public Object solvePart2(Reader input) 
     {
-        return 0;
+        return null;
     }
 
 }

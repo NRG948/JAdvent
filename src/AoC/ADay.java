@@ -1,3 +1,5 @@
+package AoC;
+
 import java.io.*;
 import java.lang.reflect.*;
 import java.net.URL;
@@ -11,7 +13,9 @@ import java.util.*;
  * Once you've succeeded at part 1, override either solveString2 or solvePart2.
  * 
  * Example:
- * public class Day26 extends ADay
+ * import AoC.*;
+
+public class Day26 extends ADay
  * {
  *    public Day26() { super(26, "Boxing Day!"); }
  *
@@ -58,7 +62,7 @@ public abstract class ADay
     }
     
     /**
-     * Find all classes that extend AbstractDay
+     * Find all classes that extend ADay
      * They MUST contain a simple public constructor with no arguments.
      */
     public static ADay[] allDays()

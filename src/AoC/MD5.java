@@ -1,3 +1,5 @@
+package AoC;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 

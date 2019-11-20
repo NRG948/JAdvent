@@ -1,3 +1,5 @@
+package AoC;
+
 import java.util.HashMap;
 
 /**
@@ -8,8 +10,8 @@ public class Example extends ADay
 {
     public Example() 
     {
-        // This example passes 0 as the day, just to avoid collision with actual days later
-        super(0, "Example");
+        // pass -1 as the day, just to avoid collision with any actual days later
+        super(-1, "Example");
     }
 
     /**

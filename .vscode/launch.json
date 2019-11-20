@@ -8,7 +8,7 @@
             "type": "java",
             "name": "Debug (Launch)-JAdvent",
             "request": "launch",
-            "mainClass": "JAdvent",
+            "mainClass": "AoC.JAdvent",
             "projectName": "JAdvent"
         }
     ]

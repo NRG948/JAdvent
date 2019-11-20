@@ -1,3 +1,5 @@
+package AoC;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -19,9 +21,21 @@ import java.util.Iterator;
  * reader.expectInt(); else if (reader.scan("right ")) x += reader.expectInt();
  */
 public class Reader {
+    /**
+     * The raw data to be read (generally, the guts of a String)
+     */
     private char[] buffer;
+    /**
+     * The index of the next character to read from the buffer
+     */
     private int pos;
+    /**
+     * The index of the end of the accessible buffer. For nested readers, this may not be buffer.length
+     */
     private int posStart;
+    /**
+     * The index of the start of the accessible buffer. For nested readers, this may not be 0
+     */
     private int posEnd;
 
     /**
@@ -661,7 +675,7 @@ public class Reader {
     }
 
     /**
-     * An enumeration of lines within
+     * An enumeration of lines within this reader, starting at the current position.
      */
     public LineIterator lines() 
     {
@@ -692,6 +706,19 @@ public class Reader {
             lines.add(r.String());
         }
         return lines.toArray(new String[lines.size()]);
+    }
+
+    /**
+     * How many distinct lines are remain?
+     */
+    public int countLines()
+    {
+        int count = 0;
+        int prev = pos;
+        while (scanUntilNextLine() > 0)
+            count++;
+        pos = prev;
+        return count;
     }
 
     /**
@@ -745,19 +772,25 @@ public class Reader {
      */
     class LineIterator implements Iterator<Reader>, Iterable<Reader> 
     {
+        /**
+         * The reading position of the current line
+         */
         int posLine;
+        /**
+         * The reading position of the next line (and end of the current one)
+         */
         int posNextLine;
 
         public LineIterator() 
         {
-            posLine = -1;
-            posNextLine = 0;
+            posNextLine = Reader.this.pos;
+            posLine = Reader.this.pos - 1;
         }
 
         @Override
         public boolean hasNext() 
         {
-            return posNextLine < posEnd;
+            return posNextLine < Reader.this.posEnd;
         }
 
         @Override
@@ -766,9 +799,9 @@ public class Reader {
             // We've already cached the start of the next line
             posLine = posNextLine;
             // Find the end of this next line (before line break characters)
-            int posEOL = findEndOfLine(buffer, posLine, posEnd);
+            int posEOL = findEndOfLine(buffer, posLine, Reader.this.posEnd);
             // Then cache the start of the next line, past the line break
-            posNextLine = findNextLineStart(buffer, posEOL, posEnd);
+            posNextLine = findNextLineStart(buffer, posEOL, Reader.this.posEnd);
             // Return a reader to parse this next line, without the line break
             return new Reader(Reader.this, posLine, posEOL);
         }
