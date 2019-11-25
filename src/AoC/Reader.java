@@ -39,6 +39,14 @@ public class Reader {
     private int posEnd;
 
     /**
+     * Two modes for dealing with spaces. If strict, every space must be accounted for.
+     * If optional, a request for a non-space item will skip over any spaces at the current read location.
+     * Optional spaces are only ignored in expect*() methods.
+     * Spaces still act as terminators to end an item.
+     */
+    public boolean optionalSpaces = true;
+
+    /**
      * Initialize this reader with a String
      * 
      * @param s
@@ -469,6 +477,34 @@ public class Reader {
     }
 
     /**
+     * Skip any characters up to and including an exact string sought.
+     * 
+     * @param str the string (case-sensitive) to search for, and then to read past
+     * @return the number of characters read (and skipped) in total.
+     *         If the desired string is never found, return to the start and return 0.
+     */
+    public int scanThrough(String str)
+    {
+        int prev = pos;
+        for (; pos <= posEnd - str.length(); pos++)
+        {
+            int comp = 0;
+            for (; comp < str.length(); comp++)
+            {
+                if (buffer[pos + comp] != str.charAt(comp))
+                    break;
+            }
+            if (comp == str.length())
+            {
+                pos += str.length();
+                return pos - prev;
+            }
+        }
+        pos = prev;
+        return 0;
+    }
+
+    /**
      * Scan up to and including the next line break (\r, \n, or \r\n together)
      * 
      * @return the number of character scanned
@@ -556,6 +592,8 @@ public class Reader {
      * @throws a runtime exception if the expected string is missing.
      */
     public String expect(String expected) {
+        if (optionalSpaces && !Character.isWhitespace(expected.charAt(0)))
+            scanSpaces();
         if (scan(expected) == 0)
             throw new ReaderException("exactly '" + expected + "'");
         return subString(pos - expected.length(), pos);
@@ -590,6 +628,8 @@ public class Reader {
      * @throws a runtime exception if an integer is not next
      */
     public int expectInteger(int radix) {
+        if (optionalSpaces)
+            scanSpaces();
         Integer n = nextInteger(radix);
         if (n == null)
             throw new ReaderException("an integer");
@@ -612,6 +652,8 @@ public class Reader {
      * @throws a runtime exception if an integer is not next
      */
     public long expectLong(int radix) {
+        if (optionalSpaces)
+            scanSpaces();
         Long n = nextLong(radix);
         if (n == null)
             throw new ReaderException("an integer");
@@ -624,6 +666,8 @@ public class Reader {
      * @throws a runtime exception if a word is not next
      */
     public String expectWord() {
+        if (optionalSpaces)
+            scanSpaces();
         String s = nextWord();
         if (s == null)
             throw new ReaderException("a word");
@@ -636,6 +680,8 @@ public class Reader {
      * @throws a runtime exception if we're at the end, or a space is next
      */
     public String expectNonSpace() {
+        if (optionalSpaces)
+            scanSpaces();
         String s = nextNonSpace();
         if (s == null)
             throw new ReaderException("something other than a space");
@@ -644,6 +690,7 @@ public class Reader {
 
     /**
      * Expects that we are not at the end. Then reads one character.
+     * At character granularity, spaces are *never* optional.
      * 
      * @throws a runtime exception if we are at the end.
      */
@@ -659,6 +706,8 @@ public class Reader {
      * @throws a runtime exception if we are not at the end.
      */
     public void expectEnd() {
+        if (optionalSpaces)
+            scanSpaces();
         if (!atEnd())
             throw new ReaderException("the end of buffer");
     }
@@ -770,7 +819,7 @@ public class Reader {
      * Enumerate an outer Reader, creating nested readers for each line. Line-break
      * characters are skipped over, and not included with any line.
      */
-    class LineIterator implements Iterator<Reader>, Iterable<Reader> 
+    public class LineIterator implements Iterator<Reader>, Iterable<Reader> 
     {
         /**
          * The reading position of the current line

@@ -4,7 +4,7 @@ public class Day21 extends ADay
 {
     public Day21() 
     {
-        super(21, "Inverse Captcha");
+        super(21, "");
     }
 
     public Object solvePart1(Reader input) 
